@@ -1,6 +1,6 @@
 const Employee = require('../db/employee')
 
-// Send all the data to the clinet
+// Send all the data to the client
 const getEmployeeData = async (req,res,next) =>{
     try{
         const data = await Employee.findAll();
@@ -17,6 +17,7 @@ const addEmployee = async(req,res,next) =>{
     try{
         const { first_name, last_name , email, employeeId, number } = req.body;
         
+
         const user = {
             first_name : first_name,
             last_name : last_name,

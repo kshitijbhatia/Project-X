@@ -1,7 +1,6 @@
 const User = require('../db/user')
-// const { v4 : uuidv4 } = require('uuid')
-// const { getUser, setUser } = require('../service/auth')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const handleUserSignup = async (req,res,next) =>{
     try{
@@ -42,7 +41,16 @@ const handleUserLogin = async (req,res,next) =>{
         try{
             const result = await bcrypt.compare(password, user[0].dataValues.password);
             if(result){
-                return res.status(200).json({msg : "Logged In!!", user : user[0].dataValues})
+                const secretKey = 'TVSM'; 
+                const expiresIn = '20s'; 
+
+                const userData = {
+                    email: user[0].dataValues.email,
+                };
+
+                const token = jwt.sign(userData, secretKey, { expiresIn });
+
+                return res.status(200).json({msg : "Logged In!!", user : user[0].dataValues, token : token})
             }else{
                 return res.status(401).json({ msg : "Invalid Password!! "})
             }

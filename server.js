@@ -6,17 +6,18 @@ const Employee = require('./db/employee')
 const User = require('./db/user')
 
 const app = express()
-const PORT = 3000
+const PORT = 5000
 
-const corsOptions = {
+const corsOption = {
     origin : 'http://localhost:3000',
     credentials : true
 }
 
-app.use(cors(corsOptions))
+app.use(cookieParser())
+app.use(cors(corsOption))
 app.use(express.urlencoded({extended : true}))
 app.use(express.json())
-app.use(cookieParser())
+
 
 const EmployeeRouter = require('./routes/employee')
 const SearchRouter = require('./routes/search')
@@ -26,7 +27,7 @@ const { restrictToLoggedInUserOnly } = require('./service/restrictUser')
 
 app.use('/search', SearchRouter)
 app.use('/user', UserRoute)
-app.use('/', EmployeeRouter)
+app.use('/',  restrictToLoggedInUserOnly ,EmployeeRouter)
 
 const startServer = async () =>{
     try{
@@ -39,4 +40,4 @@ const startServer = async () =>{
     }
 }
 
-startServer()
+startServer();
